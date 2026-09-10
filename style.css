@@ -86,6 +86,13 @@ body {
   font-family: inherit;
 }
 .o-nhap:focus { outline: none; border-color: var(--accent); }
+/* Không đặt riêng thì placeholder ăn theo màu/độ đậm của input thật
+   (--text, font-weight 700) nên nhìn như đã có số thật, dễ tưởng nhầm. */
+.o-nhap::placeholder {
+  color: var(--muted);
+  font-weight: 500;
+  opacity: 1; /* Firefox tự hạ opacity placeholder mặc định, ép về 1 rồi tự điều màu */
+}
 
 .nut-xoa {
   position: absolute;
