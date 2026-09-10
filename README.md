@@ -16,6 +16,10 @@ hoặc vượt ngưỡng đó thì chỉ hiện đọc chữ, tự ẩn khối V
 
 ## Cách dùng
 
+Nền trang là ảnh bé mèo Bánh, chữ trắng, điểm nhấn xanh dương — các khối
+điều khiển hiện dạng kính mờ (nền tối trong suốt + làm mờ hậu cảnh) để vẫn
+đọc rõ chữ mà thấy được ảnh phía sau.
+
 Mở [nguyenthanhchuong.github.io/so-tien-thanh-so-chu](https://nguyenthanhchuong.github.io/so-tien-thanh-so-chu/),
 gõ số vào ô, kết quả hiện ngay bên dưới. Có nút sao chép riêng cho từng ngôn
 ngữ. Bật "Số âm" nếu cần đọc số âm — bàn phím số trên điện thoại thường không

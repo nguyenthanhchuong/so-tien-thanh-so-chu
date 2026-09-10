@@ -1,32 +1,24 @@
-/* Tông HỒNG BONG BÓNG (đổi từ tím indigo cho dễ thương hơn) — vẫn cố ý khác
-   ba app trước (đỏ gạch sổ gia đình, xanh mòng két sổ cá nhân, nâu vàng cẩm
-   nang Dota), để bốn icon xếp cạnh nhau trên màn hình chính vẫn phân biệt
-   được ngay. */
+/* Tông ẢNH NỀN (bé mèo Bánh) + CHỮ TRẮNG + ĐIỂM NHẤN XANH DƯƠNG.
+   Đổi từ tông hồng pastel theo yêu cầu — nền giờ là ảnh thật nên các "thẻ"
+   (.nhap, .vat-dieu-khien, .ket-qua) chuyển sang kính mờ (nền tối trong
+   suốt + backdrop-filter blur) thay vì nền trắng đặc, để chữ trắng còn đọc
+   được mà vẫn thấy ảnh phía sau lấp ló. --bg không còn là màu nền trang (đó
+   là ảnh, đặt thẳng trên body) mà là màu "hốc lõm" dùng cho ô nhập/chip —
+   xem ghi chú tại từng chỗ dùng.
+   Vẫn cố ý khác ba app trước (đỏ gạch sổ gia đình, xanh mòng két sổ cá
+   nhân, nâu vàng cẩm nang Dota) để bốn icon xếp cạnh nhau trên màn hình
+   chính vẫn phân biệt được ngay. */
 :root {
-  --bg: #fff0f6;
-  --card: #ffffff;
-  --text: #4a2545;
-  --muted: #9b7a95;
-  --line: #ffd9ea;
-  --accent: #ff5da2;
-  --accent-soft: #ffe3f0;
-  --danger: #e0455a;
-  --danger-soft: #fde6e8;
+  --bg: rgba(255, 255, 255, 0.08);
+  --card: rgba(12, 16, 26, 0.6);
+  --text: #ffffff;
+  --muted: #c7d2e6;
+  --line: rgba(255, 255, 255, 0.22);
+  --accent: #3da9ff;
+  --accent-soft: rgba(61, 169, 255, 0.22);
+  --danger: #ff6b7a;
+  --danger-soft: rgba(255, 107, 122, 0.2);
   --radius: 18px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #241220;
-    --card: #33192c;
-    --text: #ffe3f0;
-    --muted: #cf9ec0;
-    --line: #4a2540;
-    --accent: #ff7db3;
-    --accent-soft: #3d1f34;
-    --danger: #ff8fa3;
-    --danger-soft: #3a1a20;
-  }
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -40,7 +32,18 @@
 [hidden] { display: none !important; }
 
 body {
-  background: var(--bg);
+  /* Lớp gradient tối phủ TRƯỚC ảnh (liệt kê trước trong background-image là
+     nằm trên): không có lớp này, ảnh sáng (mảng lá vàng, cửa kính) sẽ nuốt
+     hết độ tương phản của chữ trắng ở đúng những chỗ đó. background-color là
+     phương án dự phòng trong lúc ảnh chưa tải xong. */
+  background-color: #0b0f1a;
+  background-image: linear-gradient(rgba(6, 10, 20, 0.6), rgba(6, 10, 20, 0.72)), url("images/nen-meo.jpg");
+  background-size: cover;
+  background-position: top center;
+  background-repeat: no-repeat;
+  /* Không dùng background-attachment: fixed — hỗ trợ chập chờn trên Safari
+     di động (ảnh nền hay bị giật/nhảy khi cuộn), mà trang này ngắn, hiếm khi
+     cần cuộn nên không mất gì. */
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   min-height: 100vh;
@@ -56,11 +59,17 @@ body {
 
 .wrap { max-width: 480px; margin: 0 auto; padding: 0 16px; }
 
+/* Kính mờ: nền tối trong suốt (--card) + làm mờ hậu cảnh phía sau bằng
+   backdrop-filter, viền sáng mảnh (--line) để tách khỏi ảnh nền — không có
+   viền, mép thẻ dễ lẫn vào những chỗ ảnh cũng tối màu (góc cửa sổ). */
 .nhap {
   background: var(--card);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 20px;
-  box-shadow: 0 6px 20px rgba(255, 93, 162, 0.12);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .nhan {
@@ -135,10 +144,13 @@ body {
 /* ===== Bộ điều khiển VAT ===== */
 .vat-dieu-khien {
   background: var(--card);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 16px 20px;
   margin-top: 12px;
-  box-shadow: 0 6px 20px rgba(255, 93, 162, 0.12);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   transition: opacity 0.15s;
 }
 .vat-hang { margin-bottom: 12px; }
@@ -205,8 +217,11 @@ body {
 .ket-qua {
   margin-top: 16px;
   background: var(--card);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: 0 6px 20px rgba(255, 93, 162, 0.12);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   overflow: hidden;
 }
 
@@ -287,7 +302,7 @@ body {
   border-radius: 999px;
   cursor: pointer;
 }
-.nut-chep:active { background: rgba(255, 93, 162, 0.18); }
+.nut-chep:active { background: rgba(61, 169, 255, 0.25); }
 .nut-chep:disabled { opacity: 0.7; cursor: default; }
 
 .trong {
