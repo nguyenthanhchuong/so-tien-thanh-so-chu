@@ -1,0 +1,207 @@
+/* Tông TÍM INDIGO — cố ý khác cả ba app trước (đỏ gạch sổ gia đình, xanh mòng
+   két sổ cá nhân, nâu vàng cẩm nang Dota), để bốn icon xếp cạnh nhau trên
+   màn hình chính vẫn phân biệt được ngay. */
+:root {
+  --bg: #f5f3fc;
+  --card: #ffffff;
+  --text: #241f33;
+  --muted: #756c8f;
+  --line: #e6e0f7;
+  --accent: #5b3fd6;
+  --accent-soft: #ece7fb;
+  --danger: #a32b1e;
+  --danger-soft: #fbe9e6;
+  --radius: 16px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14111f;
+    --card: #1e1a2e;
+    --text: #ece9f7;
+    --muted: #a49bc4;
+    --line: #322c47;
+    --accent: #9683f0;
+    --accent-soft: #292140;
+    --danger: #f08b7f;
+    --danger-soft: #3a2320;
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+/* Bắt buộc: thuộc tính hidden phải luôn thắng.
+   Quy tắc mặc định của trình duyệt là [hidden] { display: none }, nhưng bất
+   kỳ khai báo display nào của mình (vd .ket-qua { display: flex }) đều cùng
+   độ ưu tiên và đứng sau trong stylesheet nên thắng — phần tử vẫn hiện dù đã
+   gán hidden. Tự bắt gặp lỗi này khi chụp màn hình kiểm tra: khu kết quả rỗng
+   hiện song song với khu trống dù JS đã set .hidden = true. */
+[hidden] { display: none !important; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  padding-bottom: 40px;
+}
+
+.top {
+  padding: 28px 20px 20px;
+  text-align: center;
+}
+.top h1 { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+.top .sub { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+
+.wrap { max-width: 480px; margin: 0 auto; padding: 0 16px; }
+
+.nhap {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(91, 63, 214, 0.08);
+}
+
+.nhan {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.hang-nhap { position: relative; }
+
+.o-nhap {
+  width: 100%;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 44px 14px 16px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  background: var(--bg);
+  font-family: inherit;
+}
+.o-nhap:focus { outline: none; border-color: var(--accent); }
+
+.nut-xoa {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: var(--line);
+  color: var(--muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.nut-xoa:active { background: var(--accent-soft); }
+
+.cong-tac {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 0.9rem;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+}
+.cong-tac input { width: 18px; height: 18px; accent-color: var(--accent); }
+
+.loi {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.ket-qua {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.the-ket-qua {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: 0 6px 20px rgba(91, 63, 214, 0.08);
+  border-left: 4px solid var(--accent);
+}
+
+.dau-the {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.dau-the .co { font-size: 1.1rem; }
+.dau-the .ten-ngon-ngu {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  flex: 1;
+}
+
+.nut-chep {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.nut-chep:active { background: var(--accent-soft); }
+.nut-chep:disabled { opacity: 0.7; cursor: default; }
+
+.the-ket-qua .chu {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  font-weight: 600;
+}
+.the-ket-qua.vi .chu::first-letter { text-transform: uppercase; }
+.the-ket-qua.en .chu::first-letter { text-transform: uppercase; }
+
+.trong {
+  margin-top: 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  padding: 12px 8px;
+}
+.vi-du { margin-top: 10px; }
+
+.thu {
+  display: inline-block;
+  margin: 4px 4px 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.thu:active { opacity: 0.8; }
+
+@media (max-width: 380px) {
+  .top h1 { font-size: 1.3rem; }
+  .o-nhap { font-size: 1.2rem; }
+}

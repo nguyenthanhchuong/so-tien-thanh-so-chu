@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test - Đổi Số Thành Chữ</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f1eefc; color: #241f33; margin: 0; padding: 20px;
+    font-size: 14px; line-height: 1.5;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .sub { color: #756c8f; font-size: 13px; margin-bottom: 16px; }
+  .tong {
+    background: #fff; border-radius: 12px; padding: 16px;
+    margin-bottom: 16px; font-size: 16px; font-weight: 700;
+  }
+  .tong.dat { border-left: 5px solid #1f8a4c; }
+  .tong.hong { border-left: 5px solid #b3261e; }
+  .nhom { background: #fff; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+  .nhom h2 { font-size: 13px; color: #756c8f; margin: 0 0 10px; }
+  .ca { padding: 6px 0; border-bottom: 1px solid #e6e0f7; font-size: 13px; }
+  .ca:last-child { border-bottom: none; }
+  .ok  { color: #1f8a4c; }
+  .no  { color: #b3261e; font-weight: 600; }
+  .chitiet { color: #756c8f; font-size: 12px; padding-left: 20px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Test - Đổi Số Thành Chữ</h1>
+  <p class="sub">Kiểm tra phần đổi số trong <code>logic.js</code>. Mở trang này là tự chạy.</p>
+  <div id="tong" class="tong">Đang chạy…</div>
+  <div id="kq"></div>
+</div>
+
+<script>
+function chayToanBo() {
+
+// ===== Khung test tối giản =====
+const ketQua = [];
+let nhomHienTai = "";
+
+function nhom(ten) { nhomHienTai = ten; }
+
+function test(ten, fn) {
+  try {
+    fn();
+    ketQua.push({ nhom: nhomHienTai, ten, dat: true });
+  } catch (e) {
+    ketQua.push({ nhom: nhomHienTai, ten, dat: false, loi: e.message });
+  }
+}
+
+function bang(thuc, mong, ghiChu) {
+  const a = JSON.stringify(thuc), b = JSON.stringify(mong);
+  if (a !== b) {
+    throw new Error(`${ghiChu ? ghiChu + ": " : ""}mong ${b}, nhận ${a}`);
+  }
+}
+
+// Tiện cho gọn: gọi thẳng convertInt hai ngôn ngữ cùng lúc khi cần so cả hai.
+const vi = n => Logic.convertInt(String(n), "vi");
+const en = n => Logic.convertInt(String(n), "en");
+
+// ===================================================================
+nhom("Tiếng Việt — số cơ bản 0-99 (bẫy: mười/mốt/lăm)");
+
+test("0", () => bang(vi(0), "không"));
+test("1", () => bang(vi(1), "một"));
+test("5", () => bang(vi(5), "năm"));
+test("9", () => bang(vi(9), "chín"));
+test("10 — không phải 'một mươi'", () => bang(vi(10), "mười"));
+test("11 — 'mười một', không phải 'mười mốt'", () => bang(vi(11), "mười một"));
+test("15 — 'mười lăm', không phải 'mười năm'", () => bang(vi(15), "mười lăm"));
+test("19", () => bang(vi(19), "mười chín"));
+test("20", () => bang(vi(20), "hai mươi"));
+test("21 — 'mốt', không phải 'một'", () => bang(vi(21), "hai mươi mốt"));
+test("24 — vẫn là 'bốn', không dùng 'tư'", () => bang(vi(24), "hai mươi bốn"));
+test("25 — 'lăm', không phải 'năm'", () => bang(vi(25), "hai mươi lăm"));
+test("30", () => bang(vi(30), "ba mươi"));
+test("99", () => bang(vi(99), "chín mươi chín"));
+
+nhom("Tiếng Việt — hàng trăm (bẫy: 'không trăm', 'linh')");
+
+test("100", () => bang(vi(100), "một trăm"));
+test("101 — cần 'linh' vì có hàng trăm", () => bang(vi(101), "một trăm linh một"));
+test("105", () => bang(vi(105), "một trăm linh năm"));
+test("110 — 'mười', không cần 'linh' (đã là số tròn chục)", () => bang(vi(110), "một trăm mười"));
+test("111", () => bang(vi(111), "một trăm mười một"));
+test("115 — 'mười lăm' chứ không phải 'mười năm'", () => bang(vi(115), "một trăm mười lăm"));
+test("121 — 'mốt'", () => bang(vi(121), "một trăm hai mươi mốt"));
+test("125 — 'lăm'", () => bang(vi(125), "một trăm hai mươi lăm"));
+test("200", () => bang(vi(200), "hai trăm"));
+test("999", () => bang(vi(999), "chín trăm chín mươi chín"));
+
+nhom("Tiếng Việt — qua hàng nghìn (bẫy: nhóm 000 ở giữa, 'không trăm')");
+
+test("1.000", () => bang(vi(1000), "một nghìn"));
+test("1.001 — không trăm LINH một", () => bang(vi(1001), "một nghìn không trăm linh một"));
+test("1.005 — không trăm LINH năm", () => bang(vi(1005), "một nghìn không trăm linh năm"));
+test("1.010 — không trăm mười (không có linh)", () => bang(vi(1010), "một nghìn không trăm mười"));
+test("1.015 — không trăm mười lăm", () => bang(vi(1015), "một nghìn không trăm mười lăm"));
+test("1.025 — không trăm hai mươi lăm", () => bang(vi(1025), "một nghìn không trăm hai mươi lăm"));
+test("1.050 — không trăm năm mươi", () => bang(vi(1050), "một nghìn không trăm năm mươi"));
+test("1.100", () => bang(vi(1100), "một nghìn một trăm"));
+test("1.500", () => bang(vi(1500), "một nghìn năm trăm"));
+test("2.000", () => bang(vi(2000), "hai nghìn"));
+test("10.000", () => bang(vi(10000), "mười nghìn"));
+test("15.000 — lăm", () => bang(vi(15000), "mười lăm nghìn"));
+test("21.000 — mốt", () => bang(vi(21000), "hai mươi mốt nghìn"));
+test("100.000", () => bang(vi(100000), "một trăm nghìn"));
+test("105.000", () => bang(vi(105000), "một trăm linh năm nghìn"));
+
+nhom("Tiếng Việt — triệu, tỷ (bẫy: bỏ qua nhóm 000 giữa hai nhóm khác 0)");
+
+test("1.000.000", () => bang(vi(1000000), "một triệu"));
+test("1.000.001 — bỏ qua cả nhóm nghìn=000", () => bang(vi(1000001), "một triệu không trăm linh một"));
+test("1.500.000 — ví dụ tiêu biểu", () => bang(vi(1500000), "một triệu năm trăm nghìn"));
+test("5.000.000", () => bang(vi(5000000), "năm triệu"));
+test("5.000.123 — bỏ qua nhóm nghìn=000 ở giữa", () => bang(vi(5000123), "năm triệu một trăm hai mươi ba"));
+test("15.000.000", () => bang(vi(15000000), "mười lăm triệu"));
+test("1.000.000.000", () => bang(vi(1000000000), "một tỷ"));
+
+nhom("Tiếng Việt — vượt tỷ (bẫy: tên bậc lặp chu kỳ nghìn/triệu/tỷ)");
+
+test("10^12 = một nghìn tỷ", () => bang(vi("1000000000000"), "một nghìn tỷ"));
+test("10^15 = một triệu tỷ", () => bang(vi("1000000000000000"), "một triệu tỷ"));
+test("10^18 = một tỷ tỷ", () => bang(vi("1000000000000000000"), "một tỷ tỷ"));
+test("10^21 = một nghìn tỷ tỷ", () => bang(vi("1000000000000000000000"), "một nghìn tỷ tỷ"));
+
+// ===================================================================
+nhom("Tiếng Anh — số cơ bản (kiểu Mỹ, không có 'and')");
+
+test("0", () => bang(en(0), "zero"));
+test("1", () => bang(en(1), "one"));
+test("15", () => bang(en(15), "fifteen"));
+test("21 — có gạch nối", () => bang(en(21), "twenty-one"));
+test("100", () => bang(en(100), "one hundred"));
+test("101 — không có 'and'", () => bang(en(101), "one hundred one"));
+test("999", () => bang(en(999), "nine hundred ninety-nine"));
+
+nhom("Tiếng Anh — nghìn, triệu, tỷ");
+
+test("1.000", () => bang(en(1000), "one thousand"));
+test("1.001", () => bang(en(1001), "one thousand one"));
+test("1.500.000 — cùng ví dụ với bản tiếng Việt", () => bang(en(1500000), "one million five hundred thousand"));
+test("15.000.000", () => bang(en(15000000), "fifteen million"));
+test("1.000.000.000", () => bang(en(1000000000), "one billion"));
+test("1.000.000.000.000", () => bang(en("1000000000000"), "one trillion"));
+
+// ===================================================================
+nhom("Giới hạn thuật toán ở biên trên (36 chữ số) — không phải cách nói thông dụng, chỉ kiểm tra công thức không vỡ");
+
+test("10^35 tiếng Việt", () => bang(vi("1" + "0".repeat(35)), "một trăm triệu tỷ tỷ tỷ"));
+test("10^35 tiếng Anh — 'decillion' vẫn đúng chuẩn short scale", () => bang(en("1" + "0".repeat(35)), "one hundred decillion"));
+
+// ===================================================================
+nhom("convertNumber — hàm chính, gộp dấu âm + cả hai ngôn ngữ");
+
+test("số dương thường", () => {
+  const kq = Logic.convertNumber("1500000");
+  bang(kq.ok, true);
+  bang(kq.vi, "một triệu năm trăm nghìn");
+  bang(kq.en, "one million five hundred thousand");
+});
+
+test("có dấu chấm phân cách sẵn (dán từ chỗ khác vào)", () => {
+  const kq = Logic.convertNumber("1.500.000");
+  bang(kq.vi, "một triệu năm trăm nghìn");
+});
+
+test("số âm — tiếng Việt 'âm', tiếng Anh 'minus'", () => {
+  const kq = Logic.convertNumber("-500");
+  bang(kq.vi, "âm năm trăm");
+  bang(kq.en, "minus five hundred");
+});
+
+test("âm không (-0) KHÔNG được đọc là 'âm không'", () => {
+  const kq = Logic.convertNumber("-0");
+  bang(kq.vi, "không");
+  bang(kq.en, "zero");
+});
+
+test("chuỗi rỗng báo lỗi, không phải hiện số 0", () => {
+  const kq = Logic.convertNumber("");
+  bang(kq.ok, false);
+  bang(kq.error, "empty");
+});
+
+test("chỉ toàn chữ cái cũng coi như rỗng", () => {
+  const kq = Logic.convertNumber("abc");
+  bang(kq.ok, false);
+  bang(kq.error, "empty");
+});
+
+test("vượt quá 36 chữ số thì báo lỗi rõ ràng, không cắt bớt âm thầm", () => {
+  const kq = Logic.convertNumber("1".repeat(37));
+  bang(kq.ok, false);
+  bang(kq.error, "qua_lon");
+  bang(kq.toiDa, 36);
+});
+
+test("đúng 36 chữ số thì vẫn chạy được (biên hợp lệ)", () => {
+  const kq = Logic.convertNumber("9".repeat(36));
+  bang(kq.ok, true);
+});
+
+// ===================================================================
+nhom("Định dạng khi gõ (thêm dấu chấm phân cách nghìn)");
+
+test("rỗng", () => bang(Logic.dinhDangKhiGo(""), ""));
+test("dưới 1000 thì chưa có dấu chấm", () => bang(Logic.dinhDangKhiGo("5"), "5"));
+test("1234 -> 1.234", () => bang(Logic.dinhDangKhiGo("1234"), "1.234"));
+test("1234567 -> 1.234.567", () => bang(Logic.dinhDangKhiGo("1234567"), "1.234.567"));
+test("giữ dấu trừ", () => bang(Logic.dinhDangKhiGo("-1234"), "-1.234"));
+test("lẫn chữ và số thì chỉ lấy phần số", () => bang(Logic.dinhDangKhiGo("abc123abc456"), "123.456"));
+test("nhiều số 0 ở đầu gộp lại còn một số 0", () => bang(Logic.dinhDangKhiGo("000"), "0"));
+test("số 0 đơn lẻ giữ nguyên, không bị xoá mất", () => bang(Logic.dinhDangKhiGo("0"), "0"));
+
+// ===================================================================
+
+const dat = ketQua.filter(k => k.dat).length;
+const hong = ketQua.length - dat;
+const oTong = document.getElementById("tong");
+oTong.className = "tong " + (hong === 0 ? "dat" : "hong");
+oTong.textContent = hong === 0
+  ? `✓ ĐẠT TẤT CẢ — ${dat}/${ketQua.length} phép thử`
+  : `✕ HỎNG ${hong} — đạt ${dat}/${ketQua.length}`;
+
+const cacNhom = [];
+ketQua.forEach(k => {
+  let n = cacNhom.find(x => x.ten === k.nhom);
+  if (!n) { n = { ten: k.nhom, ds: [] }; cacNhom.push(n); }
+  n.ds.push(k);
+});
+
+document.getElementById("kq").innerHTML = cacNhom.map(n => `
+  <div class="nhom">
+    <h2>${n.ten}</h2>
+    ${n.ds.map(k => `
+      <div class="ca">
+        <span class="${k.dat ? "ok" : "no"}">${k.dat ? "✓" : "✕"}</span>
+        ${k.ten}
+        ${k.dat ? "" : `<div class="chitiet">${k.loi}</div>`}
+      </div>`).join("")}
+  </div>`).join("");
+
+}  // hết chayToanBo
+
+// Nạp logic.js kèm dấu thời gian để trình duyệt không đưa bản cũ trong bộ nhớ
+// đệm ra test. Test chạy trên code cũ còn nguy hiểm hơn là không test.
+(function napRoiChay() {
+  const s = document.createElement("script");
+  s.src = "logic.js?t=" + Date.now();
+  s.onload = chayToanBo;
+  s.onerror = function () {
+    const o = document.getElementById("tong");
+    o.className = "tong hong";
+    o.textContent = "✕ Không nạp được logic.js";
+  };
+  document.head.appendChild(s);
+})();
+</script>
+</body>
+</html>

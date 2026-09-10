@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#5b3fd6">
+<title>Đổi Số Thành Chữ</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Số → Chữ">
+<link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+
+<header class="top">
+  <h1>Đổi Số Thành Chữ</h1>
+  <p class="sub">Number to Words · Việt · English</p>
+</header>
+
+<main class="wrap">
+
+  <section class="nhap">
+    <label class="nhan" for="so-input">Nhập số</label>
+    <div class="hang-nhap">
+      <input type="text" id="so-input" class="o-nhap" inputmode="numeric"
+             autocomplete="off" spellcheck="false" placeholder="Ví dụ: 1500000">
+      <button type="button" id="btn-xoa" class="nut-xoa" aria-label="Xoá" hidden>✕</button>
+    </div>
+
+    <label class="cong-tac">
+      <input type="checkbox" id="am-check">
+      <span>Số âm</span>
+    </label>
+
+    <p class="loi" id="o-loi" hidden></p>
+  </section>
+
+  <section class="ket-qua" id="khu-ket-qua" hidden>
+
+    <div class="the-ket-qua vi">
+      <div class="dau-the">
+        <span class="co">🇻🇳</span>
+        <span class="ten-ngon-ngu">Tiếng Việt</span>
+        <button type="button" class="nut-chep" data-target="chu-vi">Sao chép</button>
+      </div>
+      <p class="chu" id="chu-vi"></p>
+    </div>
+
+    <div class="the-ket-qua en">
+      <div class="dau-the">
+        <span class="co">🇬🇧</span>
+        <span class="ten-ngon-ngu">English</span>
+        <button type="button" class="nut-chep" data-target="chu-en">Copy</button>
+      </div>
+      <p class="chu" id="chu-en"></p>
+    </div>
+
+  </section>
+
+  <section class="trong" id="khu-trong">
+    <p>Gõ một số vào ô bên trên để xem cách đọc bằng chữ, cả tiếng Việt lẫn tiếng Anh.</p>
+    <p class="vi-du">Ví dụ: <button type="button" class="thu" data-so="1500000">1.500.000</button>
+      <button type="button" class="thu" data-so="1000000000">1.000.000.000</button>
+      <button type="button" class="thu" data-so="1005">1.005</button></p>
+  </section>
+
+</main>
+
+<script src="logic.js?v=1"></script>
+<script src="app.js?v=1"></script>
+
+<script>
+// Đăng ký service worker để cài được ra màn hình chính và dùng khi mất mạng.
+// Bọc trong điều kiện vì trình duyệt cũ không có, và lỗi ở đây không được phép
+// làm hỏng trang — công cụ vẫn phải chạy bình thường khi không đăng ký nổi.
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
