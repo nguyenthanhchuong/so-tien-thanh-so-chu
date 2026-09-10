@@ -197,10 +197,12 @@ const Logic = (function () {
     };
   }
 
-  // Định dạng lại một chuỗi đang gõ dở thành có dấu chấm phân cách nghìn,
-  // dùng cho ô nhập liệu — thuần chuỗi, không qua Number nên không giới hạn
-  // độ lớn và không có sai số làm tròn.
-  function dinhDangKhiGo(raw) {
+  // Thêm dấu phân cách nghìn vào một chuỗi chữ số, dùng dấu tuỳ chọn — thuần
+  // chuỗi, không qua Number nên không giới hạn độ lớn và không có sai số làm
+  // tròn. dinhDangKhiGo() bên dưới là bản mặc định (dấu chấm, dùng cho ô nhập
+  // liệu); dùng hàm này trực tiếp khi cần đổi dấu (ví dụ cột tiếng Anh hiển
+  // thị số theo quy ước dấu phẩy trong khi ô nhập vẫn luôn là dấu chấm).
+  function dinhDangVoiDau(raw, dauPhanCach) {
     const s = String(raw == null ? "" : raw);
     const amDau = /^\s*-/.test(s);
     const digits = chiLayChuSo(s);
@@ -210,14 +212,65 @@ const Logic = (function () {
     for (let i = 0; i < digits.length; i++) {
       const conLai = digits.length - i;
       ra += digits[i];
-      if (conLai > 1 && (conLai - 1) % 3 === 0) ra += ".";
+      if (conLai > 1 && (conLai - 1) % 3 === 0) ra += dauPhanCach;
     }
     return (amDau ? "-" : "") + ra;
   }
 
+  function dinhDangKhiGo(raw) {
+    return dinhDangVoiDau(raw, ".");
+  }
+
+  // ===== Tính VAT =====
+  // Khác với phần đọc số ở trên, phần này TÍNH TOÁN (nhân/chia theo %) nên
+  // bắt buộc phải qua Number — không thể làm thuần chuỗi. Vì vậy giới hạn số
+  // chữ số CHẶT HƠN hẳn mức 36 của phần đọc số, để chắc chắn nằm trong vùng
+  // Number còn chính xác tuyệt đối (2^53 ≈ 16 chữ số); không có giá tiền thật
+  // nào cần vượt 15 chữ số nên đây không phải đánh đổi tính năng.
+  const NGUONG_AN_TOAN_VAT = 15;
+
+  // Tính VAT theo một trong hai chiều:
+  //   "truoc" — chuoiSo là giá TRƯỚC thuế: vat = tròn(giá × tỷ lệ), tổng = giá + vat.
+  //   "sau"   — chuoiSo là giá ĐÃ GỒM thuế: giá = tròn(tổng / (1 + tỷ lệ)),
+  //             vat = tổng - giá (suy ra bằng phép TRỪ, không tính riêng).
+  //
+  // Cố ý suy ra phần còn lại bằng phép trừ thay vì làm tròn độc lập cả hai
+  // phần: nếu làm tròn riêng "giá" và "vat" rồi cộng lại, tổng có thể lệch
+  // 1 đồng so với số ban đầu — cùng nguyên tắc "làm tròn dồn vào phần còn lại
+  // để tổng luôn khớp" đã dùng trong app sổ chi tiêu (phanBo/phanBoCuaKhoanThu).
+  function tinhVAT(chuoiSo, tyLePhanTram, chieu) {
+    if (!/^\d+$/.test(String(chuoiSo || ""))) {
+      return { ok: false, error: "khong_hop_le" };
+    }
+    if (chuoiSo.length > NGUONG_AN_TOAN_VAT) {
+      return { ok: false, error: "qua_lon", toiDa: NGUONG_AN_TOAN_VAT };
+    }
+    const r = Number(tyLePhanTram);
+    if (!Number.isFinite(r)) {
+      return { ok: false, error: "ty_le_khong_hop_le" };
+    }
+
+    const n = Number(chuoiSo);
+    let goc, vat, tong;
+
+    if (chieu === "sau") {
+      const mauSo = 1 + r / 100;
+      if (mauSo <= 0) return { ok: false, error: "ty_le_khong_hop_le" };
+      tong = n;
+      goc = Math.round(tong / mauSo);
+      vat = tong - goc;
+    } else {
+      goc = n;
+      vat = Math.round(goc * (r / 100));
+      tong = goc + vat;
+    }
+
+    return { ok: true, goc: String(goc), vat: String(vat), tong: String(tong) };
+  }
+
   return {
-    convertNumber, convertInt, dinhDangKhiGo, chiLayChuSo,
-    nhomVN, nhomEN, scaleVN, chiaNhom,
-    SO_CHU_SO_TOI_DA, BAC_EN
+    convertNumber, convertInt, dinhDangKhiGo, dinhDangVoiDau, chiLayChuSo,
+    nhomVN, nhomEN, scaleVN, chiaNhom, tinhVAT,
+    SO_CHU_SO_TOI_DA, NGUONG_AN_TOAN_VAT, BAC_EN
   };
 })();

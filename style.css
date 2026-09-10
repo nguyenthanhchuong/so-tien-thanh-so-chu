@@ -124,57 +124,163 @@ body {
   line-height: 1.5;
 }
 
-.ket-qua {
-  margin-top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.the-ket-qua {
+/* ===== Bộ điều khiển VAT ===== */
+.vat-dieu-khien {
   background: var(--card);
   border-radius: var(--radius);
-  padding: 18px;
+  padding: 16px 20px;
+  margin-top: 12px;
   box-shadow: 0 6px 20px rgba(91, 63, 214, 0.08);
-  border-left: 4px solid var(--accent);
+  transition: opacity 0.15s;
 }
-
-.dau-the {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-.dau-the .co { font-size: 1.1rem; }
-.dau-the .ten-ngon-ngu {
+.vat-hang { margin-bottom: 12px; }
+.vat-hang:last-of-type { margin-bottom: 0; }
+.vat-nhan {
+  display: block;
   font-size: 0.78rem;
   font-weight: 700;
   color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  flex: 1;
+  margin-bottom: 8px;
 }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1.5px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.chip.on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.ty-le-tuy-chinh {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1.5px solid var(--line);
+  background: var(--bg);
+}
+.ty-le-tuy-chinh input {
+  width: 56px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: inherit;
+  text-align: right;
+}
+.ty-le-tuy-chinh input:focus { outline: none; }
+.ty-le-tuy-chinh span { color: var(--muted); font-size: 0.9rem; font-weight: 700; }
+
+.vat-ghi-chu {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+/* ===== Bảng kết quả (số + chữ, 2 ngôn ngữ song song) ===== */
+.ket-qua {
+  margin-top: 16px;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 20px rgba(91, 63, 214, 0.08);
+  overflow: hidden;
+}
+
+.bang-hang {
+  display: grid;
+  grid-template-columns: minmax(76px, 1fr) 1.4fr 1.4fr;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.bang-hang:last-child { border-bottom: none; }
+
+.bang-dau {
+  background: var(--accent-soft);
+  padding: 10px 16px;
+}
+.bang-dau .bang-o {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: 4px;
+  column-gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.bang-dau .co { font-size: 0.95rem; }
+/* margin-left:auto đẩy nút sang phải KHI còn đủ chỗ trên một dòng; khi cột
+   quá hẹp (điện thoại), flex-wrap ở trên cho phép nút rơi xuống dòng dưới
+   thay vì tràn ra ngoài khung — bắt được lỗi này khi thử ở khổ 375px, nút
+   "Copy" bị cắt cụt vì mỗi cột chỉ còn ~111px, không đủ cho cả nhãn lẫn nút. */
+.bang-dau .nut-chep { margin-left: auto; text-transform: none; letter-spacing: normal; }
+
+.bang-nhan {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--muted);
+  line-height: 1.4;
+  align-self: center;
+}
+.dau-nhap {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* min-width:0 là bắt buộc: mặc định flex/grid item không co nhỏ hơn nội
+   dung của nó, nên số dài hay nút bên trong sẽ đội khung ra ngoài thay vì
+   xuống dòng/co lại theo cột. */
+.bang-o { min-width: 0; }
+.bang-so {
+  font-size: 0.95rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+.bang-chu {
+  margin-top: 3px;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.bang-chu::first-letter { text-transform: uppercase; }
 
 .nut-chep {
   border: 1px solid var(--line);
   background: transparent;
   color: var(--accent);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  padding: 5px 12px;
+  padding: 4px 10px;
   border-radius: 999px;
   cursor: pointer;
 }
-.nut-chep:active { background: var(--accent-soft); }
+.nut-chep:active { background: rgba(91, 63, 214, 0.15); }
 .nut-chep:disabled { opacity: 0.7; cursor: default; }
-
-.the-ket-qua .chu {
-  font-size: 1.05rem;
-  line-height: 1.6;
-  font-weight: 600;
-}
-.the-ket-qua.vi .chu::first-letter { text-transform: uppercase; }
-.the-ket-qua.en .chu::first-letter { text-transform: uppercase; }
 
 .trong {
   margin-top: 20px;
@@ -204,4 +310,8 @@ body {
 @media (max-width: 380px) {
   .top h1 { font-size: 1.3rem; }
   .o-nhap { font-size: 1.2rem; }
+  .bang-hang { grid-template-columns: minmax(56px, 0.8fr) 1fr 1fr; gap: 6px; padding: 12px 10px; }
+  .bang-so { font-size: 0.82rem; }
+  .bang-chu { font-size: 0.7rem; }
+  .bang-nhan { font-size: 0.66rem; }
 }

@@ -220,6 +220,74 @@ test("lẫn chữ và số thì chỉ lấy phần số", () => bang(Logic.dinhD
 test("nhiều số 0 ở đầu gộp lại còn một số 0", () => bang(Logic.dinhDangKhiGo("000"), "0"));
 test("số 0 đơn lẻ giữ nguyên, không bị xoá mất", () => bang(Logic.dinhDangKhiGo("0"), "0"));
 
+nhom("Định dạng theo ngôn ngữ (dinhDangVoiDau) — Việt dấu chấm, Anh dấu phẩy");
+
+test("tiếng Việt vẫn dùng dấu chấm", () => bang(Logic.dinhDangVoiDau("1500000", "."), "1.500.000"));
+test("tiếng Anh dùng dấu phẩy", () => bang(Logic.dinhDangVoiDau("1500000", ","), "1,500,000"));
+test("giữ dấu trừ với dấu phẩy", () => bang(Logic.dinhDangVoiDau("-1500000", ","), "-1,500,000"));
+
+// ===================================================================
+nhom("Tính VAT — chiều TRƯỚC thuế (nhập giá gốc, tính ra tiền thuế + tổng)");
+
+test("1.000.000, VAT 10% -> thuế 100.000, tổng 1.100.000", () => {
+  const kq = Logic.tinhVAT("1000000", 10, "truoc");
+  bang(kq.ok, true);
+  bang(kq.goc, "1000000");
+  bang(kq.vat, "100000");
+  bang(kq.tong, "1100000");
+});
+
+test("VAT 0% thì thuế = 0, tổng = giá gốc", () => {
+  const kq = Logic.tinhVAT("500000", 0, "truoc");
+  bang(kq.vat, "0");
+  bang(kq.tong, "500000");
+});
+
+test("VAT 8% có làm tròn — 333.333 x 8% = 26.666,64 -> tròn 26.667", () => {
+  const kq = Logic.tinhVAT("333333", 8, "truoc");
+  bang(kq.vat, "26667");
+  // Bắt buộc: tổng luôn bằng giá gốc + thuế đã làm tròn, không lệch 1 đồng.
+  bang(kq.tong, String(333333 + 26667));
+});
+
+nhom("Tính VAT — chiều SAU thuế (nhập giá đã gồm thuế, tách ngược ra giá gốc)");
+
+test("1.100.000 đã gồm 10% -> giá gốc 1.000.000, thuế 100.000", () => {
+  const kq = Logic.tinhVAT("1100000", 10, "sau");
+  bang(kq.ok, true);
+  bang(kq.goc, "1000000");
+  bang(kq.vat, "100000");
+  bang(kq.tong, "1100000");
+});
+
+test("tách ngược không tròn đẹp vẫn phải khớp: giá + thuế = đúng tổng đã nhập", () => {
+  // 1.000.000 / 1.08 = 925.925,9... -> tròn giá trước, thuế suy ra bằng phép trừ
+  // để CHẮC CHẮN giá + thuế = 1.000.000, không parse chưa chắc đã khớp nếu
+  // tính vat = tổng - tổng/1.08 rồi làm tròn riêng.
+  const kq = Logic.tinhVAT("1000000", 8, "sau");
+  bang(kq.ok, true);
+  bang(String(Number(kq.goc) + Number(kq.vat)), "1000000");
+});
+
+nhom("Tính VAT — trường hợp lỗi phải báo rõ, không âm thầm tính sai");
+
+test("chuỗi rỗng không hợp lệ", () => bang(Logic.tinhVAT("", 10, "truoc").ok, false));
+test("có chữ cái lẫn vào không hợp lệ", () => bang(Logic.tinhVAT("123abc", 10, "truoc").ok, false));
+test("quá 15 chữ số thì từ chối tính VAT (ngoài vùng Number an toàn)", () => {
+  const kq = Logic.tinhVAT("1".repeat(16), 10, "truoc");
+  bang(kq.ok, false);
+  bang(kq.error, "qua_lon");
+  bang(kq.toiDa, 15);
+});
+test("đúng 15 chữ số thì vẫn tính được (biên hợp lệ)", () => {
+  bang(Logic.tinhVAT("9".repeat(15), 10, "truoc").ok, true);
+});
+test("tỷ lệ khiến mẫu số <= 0 ở chiều 'sau' phải bị chặn", () => {
+  const kq = Logic.tinhVAT("1000000", -100, "sau");
+  bang(kq.ok, false);
+  bang(kq.error, "ty_le_khong_hop_le");
+});
+
 // ===================================================================
 
 const dat = ketQua.filter(k => k.dat).length;
