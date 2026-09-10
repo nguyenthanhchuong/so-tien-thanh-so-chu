@@ -39,7 +39,7 @@ body {
   background-color: #0b0f1a;
   background-image: linear-gradient(rgba(6, 10, 20, 0.6), rgba(6, 10, 20, 0.72)), url("images/nen-meo.jpg");
   background-size: cover;
-  background-position: top center;
+  background-position: center 30%;
   background-repeat: no-repeat;
   /* Không dùng background-attachment: fixed — hỗ trợ chập chờn trên Safari
      di động (ảnh nền hay bị giật/nhảy khi cuộn), mà trang này ngắn, hiếm khi
@@ -48,6 +48,24 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   min-height: 100vh;
   padding-bottom: 40px;
+}
+
+/* Ảnh nền là ảnh DỌC (1000x2112). Trên điện thoại (khung cũng dọc, tỉ lệ gần
+   giống ảnh) thì "cover" ở trên hiện gần trọn ảnh, ổn.
+   Nhưng trên màn hình NGANG rộng (desktop), "cover" phải phóng to ảnh rất
+   nhiều theo chiều dọc mới lấp đầy chiều ngang — khung nhìn chỉ còn lọt vào
+   một dải mỏng của ảnh. Dải đó lại hay rơi đúng vào mảng tối sẵn có trong
+   ảnh (khung cửa gỗ đen, lông mèo màu tối) CỘNG THÊM lớp phủ đen ở trên, nên
+   nhìn như mất hẳn ảnh — không phải ảnh không tải được, mà là phóng to vào
+   đúng chỗ tối nhất của nó. Bắt lỗi này từ ảnh chụp Chrome thật anh gửi.
+   Cách sửa: từ khung đủ rộng, đổi sang co ẢNH (không đụng lớp phủ gradient)
+   theo CHIỀU CAO thay vì cover theo chiều ngang — đỡ bị phóng to quá đà.
+   Ảnh khi đó không lấp hết bề ngang, hai bên để lộ màu nền đặc (--bg-color),
+   cùng tông tối với lớp phủ nên nhìn như viền khung chủ ý chứ không phải lỗi. */
+@media (min-width: 700px) {
+  body {
+    background-size: cover, auto 105vh;
+  }
 }
 
 .top {
