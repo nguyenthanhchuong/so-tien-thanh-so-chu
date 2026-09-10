@@ -15,6 +15,13 @@ const tyLeInput = $("ty-le-input");
 function hienDung(el) { el.hidden = false; }
 function anDi(el) { el.hidden = true; }
 
+// Gắn đơn vị tiền vào CUỐI phần chữ (không đụng logic.js): mọi số trong app
+// này giờ đều là tiền — kể cả dòng đọc chữ đơn thuần khi VAT bị tắt (số âm/
+// quá lớn) — nên gắn ở đây một chỗ thay vì rải rác từng nơi gọi convertNumber.
+function voiDonVi(kq) {
+  return { ...kq, vi: kq.vi + " đồng", en: kq.en + " dong" };
+}
+
 // ===== Trạng thái điều khiển VAT =====
 let cheDoVat = "truoc"; // "truoc" | "sau"
 
@@ -129,7 +136,8 @@ function tinhLai() {
   }
 
   const soDeDoi = (laAm ? "-" : "") + raw;
-  const kq = Logic.convertNumber(soDeDoi);
+  const kqTho = Logic.convertNumber(soDeDoi);
+  const kq = kqTho.ok ? voiDonVi(kqTho) : kqTho;
 
   if (!kq.ok) {
     anDi(khuKetQua);
@@ -172,7 +180,7 @@ function tinhLai() {
 
   anDi(vatGhiChu);
 
-  const doiChu = n => Logic.convertNumber(n);
+  const doiChu = n => voiDonVi(Logic.convertNumber(n));
   const gocChu = doiChu(vatKq.goc);
   const vatChu = doiChu(vatKq.vat);
   const tongChu = doiChu(vatKq.tong);

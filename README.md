@@ -1,16 +1,18 @@
 # Đổi Số Thành Chữ
 
-Gõ một số, xem ngay cách đọc bằng chữ — song ngữ Việt và Anh hiện cùng lúc,
-không cần chuyển đổi qua lại.
+Gõ một số tiền, xem ngay cách đọc bằng chữ — song ngữ Việt và Anh hiện cùng
+lúc, không cần chuyển đổi qua lại — kèm tính VAT (trước thuế / đã gồm thuế).
 
-Ví dụ: `1500000` →
-- 🇻🇳 một triệu năm trăm nghìn
-- 🇬🇧 one million five hundred thousand
+Ví dụ: `1500000`, VAT 8% →
+- 🇻🇳 Giá trước thuế: 1.500.000 — một triệu năm trăm nghìn đồng
+- 🇬🇧 Before VAT: 1,500,000 — one million five hundred thousand dong
 
 ## Phạm vi
 
-Chỉ đổi số nguyên (dương hoặc âm) thành chữ số đếm thuần — **không** gắn đơn
-vị tiền tệ ("đồng", "dollar"...). Hỗ trợ tới 36 chữ số.
+Đổi số nguyên (dương hoặc âm) thành chữ, có gắn đơn vị tiền ("đồng" /
+"dong") ở cuối. Hỗ trợ tới 36 chữ số cho phần đọc chữ; riêng phần tính VAT
+giới hạn 15 chữ số (xem phần "Vì sao xử lý bằng chuỗi" bên dưới) — số âm
+hoặc vượt ngưỡng đó thì chỉ hiện đọc chữ, tự ẩn khối VAT kèm ghi chú.
 
 ## Cách dùng
 
@@ -18,6 +20,12 @@ Mở [nguyenthanhchuong.github.io/so-tien-thanh-so-chu](https://nguyenthanhchuon
 gõ số vào ô, kết quả hiện ngay bên dưới. Có nút sao chép riêng cho từng ngôn
 ngữ. Bật "Số âm" nếu cần đọc số âm — bàn phím số trên điện thoại thường không
 có phím trừ nên tách riêng thành công tắc.
+
+Bên dưới ô nhập là bộ điều khiển VAT: chọn số vừa nhập là giá trước thuế hay
+đã gồm thuế, và thuế suất (mặc định 8%, có sẵn 0/5/8/10% hoặc gõ tay tuỳ
+chỉnh). Cả ba dòng — giá trước thuế, tiền thuế, giá sau thuế — đều đọc chữ
+song ngữ; phần còn lại luôn suy ra bằng phép trừ để tổng không lệch do làm
+tròn.
 
 Có thể cài ra màn hình chính (Chrome/Safari → "Cài đặt ứng dụng" / "Thêm vào
 màn hình chính") để dùng như app, kể cả khi mất mạng.

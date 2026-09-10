@@ -4,7 +4,7 @@
 // Không dùng cache-first — bài học từ app chi tiêu: máy đã lưu index.html thì
 // vĩnh viễn chạy bản cũ, mọi bản sửa đẩy lên đều không tới được người dùng,
 // và rất khó nhận ra vì trang vẫn chạy bình thường như không có gì sai.
-const CACHE_VERSION = "so-tien-thanh-so-chu-v5";
+const CACHE_VERSION = "so-tien-thanh-so-chu-v6";
 
 // Cache trọn bộ: cả công cụ chỉ có vài file tĩnh nên tải hết một lần là dùng
 // offline được đầy đủ, không phải chọn lọc.
@@ -13,7 +13,7 @@ const SHELL = [
   "./index.html",
   "./style.css?v=6",
   "./logic.js?v=2",
-  "./app.js?v=2",
+  "./app.js?v=3",
   "./manifest.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png"
