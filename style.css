@@ -1,30 +1,31 @@
-/* Tông TÍM INDIGO — cố ý khác cả ba app trước (đỏ gạch sổ gia đình, xanh mòng
-   két sổ cá nhân, nâu vàng cẩm nang Dota), để bốn icon xếp cạnh nhau trên
-   màn hình chính vẫn phân biệt được ngay. */
+/* Tông HỒNG BONG BÓNG (đổi từ tím indigo cho dễ thương hơn) — vẫn cố ý khác
+   ba app trước (đỏ gạch sổ gia đình, xanh mòng két sổ cá nhân, nâu vàng cẩm
+   nang Dota), để bốn icon xếp cạnh nhau trên màn hình chính vẫn phân biệt
+   được ngay. */
 :root {
-  --bg: #f5f3fc;
+  --bg: #fff0f6;
   --card: #ffffff;
-  --text: #241f33;
-  --muted: #756c8f;
-  --line: #e6e0f7;
-  --accent: #5b3fd6;
-  --accent-soft: #ece7fb;
-  --danger: #a32b1e;
-  --danger-soft: #fbe9e6;
-  --radius: 16px;
+  --text: #4a2545;
+  --muted: #9b7a95;
+  --line: #ffd9ea;
+  --accent: #ff5da2;
+  --accent-soft: #ffe3f0;
+  --danger: #e0455a;
+  --danger-soft: #fde6e8;
+  --radius: 18px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #14111f;
-    --card: #1e1a2e;
-    --text: #ece9f7;
-    --muted: #a49bc4;
-    --line: #322c47;
-    --accent: #9683f0;
-    --accent-soft: #292140;
-    --danger: #f08b7f;
-    --danger-soft: #3a2320;
+    --bg: #241220;
+    --card: #33192c;
+    --text: #ffe3f0;
+    --muted: #cf9ec0;
+    --line: #4a2540;
+    --accent: #ff7db3;
+    --accent-soft: #3d1f34;
+    --danger: #ff8fa3;
+    --danger-soft: #3a1a20;
   }
 }
 
@@ -59,7 +60,7 @@ body {
   background: var(--card);
   border-radius: var(--radius);
   padding: 20px;
-  box-shadow: 0 6px 20px rgba(91, 63, 214, 0.08);
+  box-shadow: 0 6px 20px rgba(255, 93, 162, 0.12);
 }
 
 .nhan {
@@ -130,7 +131,7 @@ body {
   border-radius: var(--radius);
   padding: 16px 20px;
   margin-top: 12px;
-  box-shadow: 0 6px 20px rgba(91, 63, 214, 0.08);
+  box-shadow: 0 6px 20px rgba(255, 93, 162, 0.12);
   transition: opacity 0.15s;
 }
 .vat-hang { margin-bottom: 12px; }
@@ -198,7 +199,7 @@ body {
   margin-top: 16px;
   background: var(--card);
   border-radius: var(--radius);
-  box-shadow: 0 6px 20px rgba(91, 63, 214, 0.08);
+  box-shadow: 0 6px 20px rgba(255, 93, 162, 0.12);
   overflow: hidden;
 }
 
@@ -279,7 +280,7 @@ body {
   border-radius: 999px;
   cursor: pointer;
 }
-.nut-chep:active { background: rgba(91, 63, 214, 0.15); }
+.nut-chep:active { background: rgba(255, 93, 162, 0.18); }
 .nut-chep:disabled { opacity: 0.7; cursor: default; }
 
 .trong {
